@@ -297,6 +297,31 @@ document.getElementById("exportCsv").addEventListener("click", ()=>{
   a.click(); a.remove();
 });
 
+
+
+
+
+// === NEW: Fetch domains from JSON file ===
+fetch('domains.json')
+  .then(response => response.json())
+  .then(domains => {
+    const container = document.getElementById('domains-container');
+    container.innerHTML = ''; // clear placeholder text
+
+    domains.forEach(domain => {
+      const card = document.createElement('div');
+      card.className = 'domain-card';
+      card.innerHTML = `
+        <h3>${domain.name}</h3>
+        <p>Expiry: ${domain.expiry}</p>
+        <p>Status: ${domain.status}</p>
+      `;
+      container.appendChild(card);
+    });
+  })
+  .catch(error => console.error('Error loading domains:', error));
+
+
 // Auto-scan on load
 window.addEventListener("load", ()=>{
   render();
