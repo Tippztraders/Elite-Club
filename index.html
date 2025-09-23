@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elite Club - Domain Reminder</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Tailwind for fast styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body class="bg-gray-100 p-4">
+  <h1 class="text-2xl font-bold mb-4">Elite Business Club — Domain Reminders</h1>
+
+  <!-- Add Domain Form -->
+  <form id="addForm" class="space-y-2 mb-6">
+    <input id="clientName" placeholder="Client Name" class="input" />
+    <input id="domainName" placeholder="Domain Name" class="input" />
+    <input id="expiryDate" type="date" class="input" />
+    <input id="email" type="email" placeholder="Client Email" class="input" />
+    <input id="whatsapp" placeholder="WhatsApp Number (optional)" class="input" />
+    <button type="submit" class="btn">Add Domain</button>
+  </form>
+
+  <!-- Quick Actions -->
+  <div class="space-x-2 mb-4">
+    <button id="scanNow" class="btn">Scan Now</button>
+    <button id="exportCsv" class="btn">Export Reminders CSV</button>
+    <button id="clearAll" class="btn bg-red-500">Clear All</button>
+  </div>
+
+  <!-- Domain Table -->
+  <table class="table-auto w-full bg-white shadow rounded">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="p-2">Client</th>
+        <th class="p-2">Domain</th>
+        <th class="p-2">Expiry</th>
+        <th class="p-2">Days Left</th>
+        <th class="p-2">Status</th>
+        <th class="p-2">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="domainTableBody"></tbody>
+  </table>
+
+  <script src="app.js"></script>
+</body>
+</html>
