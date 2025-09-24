@@ -327,3 +327,46 @@ window.addEventListener("load", ()=>{
   render();
   scanAndMark();
 });
+
+
+
+
+// === NEW: Handle Add Domain button ===
+document.getElementById('add-domain').addEventListener('click', () => {
+  const name = prompt("Enter domain name:");
+  const expiry = prompt("Enter expiry date (YYYY-MM-DD):");
+  const status = "Active"; // default
+
+  if (name && expiry) {
+    const container = document.getElementById('domains-container');
+
+    const card = document.createElement('div');
+    card.className = 'domain-card';
+    card.innerHTML = `
+      <h3>${name}</h3>
+      <p>Expiry: ${expiry}</p>
+      <p>Status: ${status}</p>
+    `;
+
+    container.appendChild(card);
+
+    // === NEW: Send EmailJS notification (mock IDs) ===
+    emailjs.send("service_xxx", "template_xxx", {
+      to_email: "tippzcashtraders@gmail.com",
+      domain_name: name,
+      expiry_date: expiry,
+      status: status
+    }).then(
+      (response) => {
+        console.log("Email sent!", response.status, response.text);
+      },
+      (error) => {
+        console.error("Email failed...", error);
+      }
+    );
+  }
+});
+
+
+
+
