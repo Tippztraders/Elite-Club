@@ -57,5 +57,65 @@
 </div>
 
 
+
+
+<!-- === CLIENT SEARCH & LIST === -->
+<div id="clientSearchContainer" style="border:1px solid #ccc; padding:10px; margin:10px 0; max-width:400px;">
+  <h3>Clients</h3>
+  <input type="text" id="clientSearchInput" placeholder="Type client name..." style="padding:5px; width:60%;">
+  <button id="clientSearchBtn" style="padding:5px;">Search</button>
+  <button id="showAllClientsBtn" style="padding:5px;">Show All</button>
+
+  <table id="clientTable" border="1" cellpadding="5" cellspacing="0" style="margin-top:10px; width:100%; border-collapse:collapse;">
+    <thead>
+      <tr><th>Client Name</th><th>Domain</th><th>Expiry</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+  // Render given client list in table
+  function renderClients(list){
+    const tbody = document.querySelector("#clientTable tbody");
+    tbody.innerHTML = "";
+    list.forEach(c=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${c.clientName || c.name}</td><td>${c.domainName || c.domain}</td><td>${c.expiryDate || c.expiry}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Load all clients from localStorage
+  function getAllClients(){
+    const domains = JSON.parse(localStorage.getItem("domains")) || [];
+    const eliteList = JSON.parse(localStorage.getItem("elite_domains_v1")) || [];
+    return domains.concat(eliteList);
+  }
+
+  // Initial render
+  renderClients(getAllClients());
+
+  // Search button
+  document.getElementById("clientSearchBtn").addEventListener("click", ()=>{
+    const term = document.getElementById("clientSearchInput").value.trim().toLowerCase();
+    if(!term) return alert("Type a name to search");
+    const filtered = getAllClients().filter(c=>(c.clientName || c.name || "").toLowerCase().includes(term));
+    renderClients(filtered);
+  });
+
+  // Show all button
+  document.getElementById("showAllClientsBtn").addEventListener("click", ()=>{
+    document.getElementById("clientSearchInput").value = "";
+    renderClients(getAllClients());
+  });
+</script>
+
+
+
+
+
+
+  
   
 </html>
