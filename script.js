@@ -149,3 +149,24 @@ window.addEventListener("load", dailyExpiryCheck);
 
 // Optional: auto daily check every 24h
 setInterval(dailyExpiryCheck,24*60*60*1000);
+
+
+
+
+// === SHOW ALL CLIENTS ===
+function showAllClients() {
+  const clients = [...new Set(getDomains().map(d => d.clientName || "N/A"))];
+  alert("Clients in database:\n" + clients.join("\n"));
+}
+
+// === SEARCH CLIENT ===
+function searchClient(name) {
+  if(!name) return alert("Please enter a name to search");
+  const matches = getDomains().filter(d => (d.clientName || "").toLowerCase().includes(name.toLowerCase()));
+  if(matches.length === 0) return alert("No clients found matching: " + name);
+
+  const list = matches.map(d => `${d.clientName} - ${d.domainName || d.name} - ${d.expiryDate || d.expiry}`).join("\n");
+  alert("Matching clients:\n" + list);
+}
+
+
