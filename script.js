@@ -70,3 +70,41 @@ function exportCsv() {
 
 // === Init ===
 document.addEventListener("DOMContentLoaded", renderDomains);
+
+
+
+// === NEW: Add Domain via form and sync ===
+document.getElementById('addForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const name = document.getElementById('domainName').value.trim();
+  const expiry = document.getElementById('expiryDate').value.trim();
+  const status = "Active";
+
+  if(!name || !expiry) return alert("Please enter domain name and expiry date");
+
+  // 1. Save to localStorage
+  const list = loadData();
+  list.push({clientName: "MockClient", domainName: name, expiryDate: expiry, email:"tippzcashtraders@gmail.com", whatsapp:"", notificationSent:false});
+  saveData(list);
+
+  // 2. Render immediately
+  const container = document.getElementById('domains-container');
+  const card = document.createElement('div');
+  card.className = 'domain-card';
+  card.innerHTML = `<h3>${name}</h3><p>Expiry: ${expiry}</p><p>Status: ${status}</p>`;
+  container.appendChild(card);
+
+  // 3. Send EmailJS notification
+  emailjs.send("service_xxx", "template_xxx", {
+    to_email: "tippzcashtraders@gmail.com",
+    domain_name: name,
+    expiry_date: expiry,
+    status: status
+  }).then(
+    (res)=>console.log("Email sent!", res.status),
+    (err)=>console.error("Email failed", err)
+  );
+
+  this.reset();
+});
+
