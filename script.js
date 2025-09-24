@@ -108,3 +108,43 @@ document.getElementById('addForm').addEventListener('submit', function(e){
   this.reset();
 });
 
+
+
+// === NEW: Daily auto-check for expiring domains ===
+function dailyExpiryCheck(){
+  const list = loadData();
+  const today = new Date();
+
+  list.forEach(item => {
+    if(item.notificationSent) return; // skip already notified
+    const expiry = new Date(item.expiryDate);
+    const diffDays = Math.ceil((expiry - today) / (1000*60*60*24));
+
+    if(diffDays <= 1){
+      // Send EmailJS reminder
+      emailjs.send("service_xxx", "template_xxx", {
+        to_email: item.email || "tippzcashtraders@gmail.com",
+        domain_name: item.domainName,
+        expiry_date: item.expiryDate,
+        status: item.status || "Active"
+      }).then(
+        res => console.log("Reminder sent for", item.domainName),
+        err => console.error("Reminder failed for", item.domainName, err)
+      );
+
+      item.notificationSent = true;
+      item.sentOn = today.toISOString().slice(0,10);
+    }
+  });
+
+  saveData(list);
+  render();
+}
+
+// Run once on load
+window.addEventListener("load", dailyExpiryCheck);
+
+// Optional: run every 24h
+setInterval(dailyExpiryCheck, 24*60*60*1000);
+
+
