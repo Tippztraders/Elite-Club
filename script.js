@@ -369,4 +369,37 @@ document.getElementById('add-domain').addEventListener('click', () => {
 
 
 
+// === NEW: Daily expiry check ===
+function checkExpiringDomains(domains) {
+  const today = new Date();
+
+  domains.forEach(domain => {
+    const expiryDate = new Date(domain.expiry);
+    const diffTime = expiryDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 1) {
+      // Send expiry reminder
+      emailjs.send("service_xxx", "template_xxx", {
+        to_email: "tippzcashtraders@gmail.com",
+        domain_name: domain.name,
+        expiry_date: domain.expiry,
+        status: domain.status
+      }).then(
+        (response) => console.log("Reminder sent for", domain.name),
+        (error) => console.error("Reminder failed...", error)
+      );
+    }
+  });
+}
+
+// Hook into existing fetch
+fetch('domains.json')
+  .then(response => response.json())
+  .then(domains => {
+    // existing rendering code runs...
+    checkExpiringDomains(domains); // <--- NEW CALL
+  });
+
+
 
