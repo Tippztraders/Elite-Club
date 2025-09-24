@@ -170,3 +170,53 @@ function searchClient(name) {
 }
 
 
+// ==== Show Clients === 
+function showAllClients() {
+  const list = loadData(); // or getDomains() depending on which data you want
+  const tbody = document.querySelector("#domainTable tbody");
+  tbody.innerHTML = "";
+  list.forEach((item, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.clientName || "MockClient"}</td>
+      <td>${item.domainName || item.name}</td>
+      <td>${item.expiryDate || item.expiry}</td>
+      <td>
+        <button onclick="deleteDomain(${idx})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Search client by name
+function searchClient(name) {
+  const list = loadData().filter(item => (item.clientName || "").toLowerCase().includes(name.toLowerCase()));
+  const tbody = document.querySelector("#domainTable tbody");
+  tbody.innerHTML = "";
+  list.forEach((item, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.clientName}</td>
+      <td>${item.domainName}</td>
+      <td>${item.expiryDate}</td>
+      <td>
+        <button onclick="deleteDomain(${idx})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// Hook buttons
+document.getElementById("searchClientBtn").addEventListener("click", () => {
+  const name = document.getElementById("searchClientInput").value.trim();
+  if(name) searchClient(name);
+});
+
+document.getElementById("showAllClientsBtn").addEventListener("click", showAllClients);
+
+// Optional: show all on load
+window.addEventListener("load", showAllClients);
+
+
